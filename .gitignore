@@ -1,0 +1,56 @@
+# Compiled files
+target/
+*.class
+
+# IDE files
+.idea/
+*.iml
+*.iws
+*.ipr
+.settings/
+.classpath
+.project
+.factorypath
+.springBeans
+
+# VS Code
+.vscode/
+.history/
+
+# Eclipse
+bin/
+.metadata/
+
+# NetBeans
+nbactions.xml
+nb-configuration.xml
+
+# Logs
+logs/
+*.log
+
+# Database files
+*.db
+*.h2.db
+
+# Application properties with passwords
+application-prod.properties
+application-dev.properties
+application-test.properties
+!application.properties
+
+# Docker
+.docker/
+*.pid
+
+# OS specific
+.DS_Store
+Thumbs.db
+
+# Maven
+dependency-reduced-pom.xml
+
+# Backup files
+*.bak
+*.swp
+*~
