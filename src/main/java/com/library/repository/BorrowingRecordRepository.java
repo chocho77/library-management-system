@@ -13,6 +13,18 @@ import java.util.Optional;
 
 @Repository
 public interface BorrowingRecordRepository extends JpaRepository<BorrowingRecord, Long> {
+
+       // Добави тези методи в BorrowingRecordRepository.java
+
+       // За статистиките
+       long countByBorrowDate(LocalDate borrowDate);
+       long countByReturnDate(LocalDate returnDate);
+       long countByReturnDateIsNullAndDueDateBefore(LocalDate date);
+       long countByReturnDateIsNull();
+
+// Провери дали вече имаш тези методи:
+// boolean existsByBookIdAndReturnDateIsNull(Long bookId);
+// List<BorrowingRecord> findByPatronIdAndReturnDateIsNull(Long patronId);
     
     // Намери текущо заета книга
     Optional<BorrowingRecord> findByBookIdAndReturnDateIsNull(Long bookId);
@@ -50,4 +62,6 @@ public interface BorrowingRecordRepository extends JpaRepository<BorrowingRecord
     int returnBook(@Param("bookId") Long bookId, 
                    @Param("patronId") Long patronId,
                    @Param("returnDate") LocalDate returnDate);
+    
+    
 }

@@ -204,4 +204,17 @@ public class PatronService {
                 .updatedAt(patron.getUpdatedAt())
                 .build();
     }
+    // Добави тези методи в PatronService.java
+
+    public PatronDTO getPatronByEmail(String email) {
+        log.debug("Fetching patron with email: {}", email);
+        Patron patron = patronRepository.findByEmail(email)
+                .orElseThrow(() -> new ResourceNotFoundException("Patron not found with email: " + email));
+        return mapToDTO(patron);
+}
+
+public long countActivePatrons() {
+    log.debug("Counting active patrons");
+    return patronRepository.countByStatus(MembershipStatus.ACTIVE);
+}
 }

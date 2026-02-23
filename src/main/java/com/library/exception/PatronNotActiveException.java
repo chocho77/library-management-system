@@ -1,5 +1,8 @@
 package com.library.exception;
 
+import lombok.Getter;
+
+@Getter
 public class PatronNotActiveException extends RuntimeException {
     
     private final Long patronId;

@@ -12,6 +12,10 @@ import java.util.Optional;
 
 @Repository
 public interface PatronRepository extends JpaRepository<Patron, Long> {
+
+       // Добави този метод в PatronRepository.java
+// (провери дали вече го имаш, ако няма - добави го)
+
     
     Optional<Patron> findByEmail(String email);
     

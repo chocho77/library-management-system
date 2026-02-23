@@ -2,6 +2,7 @@ package com.library.service;
 
 import com.library.dto.BorrowingRecordDTO;
 import com.library.exception.BookAlreadyBorrowedException;
+import com.library.exception.InvalidBorrowingOperationException;
 import com.library.exception.ResourceNotFoundException;
 import com.library.model.*;
 import com.library.repository.BookRepository;
@@ -16,6 +17,10 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
+
+// Добави импорти най-отгоре
+import java.util.HashMap;
+import java.util.Map;
 
 @Slf4j
 @Service
@@ -232,4 +237,53 @@ public class BorrowingService {
                 .isOverdue(record.isOverdue())
                 .build();
     }
+
+// Добави тези методи в BorrowingService.java
+
+@Transactional
+public BorrowingRecordDTO extendBorrowing(Long recordId, int days) {
+    log.info("Extending borrowing record ID: {} by {} days", recordId, days);
+    
+    BorrowingRecord record = borrowingRecordRepository.findById(recordId)
+            .orElseThrow(() -> new ResourceNotFoundException("Borrowing record not found with id: " + recordId));
+    
+    if (record.getReturnDate() != null) {
+        throw new InvalidBorrowingOperationException("Cannot extend a returned book");
+    }
+    
+    if (record.isOverdue()) {
+        throw new InvalidBorrowingOperationException("Cannot extend an overdue book. Please return it first.");
+    }
+    
+    record.setDueDate(record.getDueDate().plusDays(days));
+    record.setStatus(BorrowingStatus.EXTENDED);
+    
+    BorrowingRecord savedRecord = borrowingRecordRepository.save(record);
+    log.info("Borrowing extended successfully. New due date: {}", savedRecord.getDueDate());
+    
+    return mapToDTO(savedRecord);
+}
+
+public Map<String, Object> getDailyBorrowingStats() {
+    log.debug("Fetching daily borrowing statistics");
+    
+    LocalDate today = LocalDate.now();
+    
+    // Тези методи трябва да ги добавиш в BorrowingRecordRepository
+    long borrowedToday = borrowingRecordRepository.countByBorrowDate(today);
+    long returnedToday = borrowingRecordRepository.countByReturnDate(today);
+    long overdue = borrowingRecordRepository.countByReturnDateIsNullAndDueDateBefore(today);
+    long activeBorrowings = borrowingRecordRepository.countByReturnDateIsNull();
+    
+    Map<String, Object> stats = new HashMap<>();
+    stats.put("date", today.toString());
+    stats.put("borrowedToday", borrowedToday);
+    stats.put("returnedToday", returnedToday);
+    stats.put("currentlyOverdue", overdue);
+    stats.put("activeBorrowings", activeBorrowings);
+    
+    return stats;
+}
+
+    
 }

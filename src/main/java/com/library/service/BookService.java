@@ -202,4 +202,12 @@ public class BookService {
                 .updatedAt(book.getUpdatedAt())
                 .build();
     }
+    // Добави този метод в BookService.java
+
+    public BookDTO getBookByIsbn(String isbn) {
+        log.debug("Fetching book with ISBN: {}", isbn);
+        Book book = bookRepository.findByIsbn(isbn)
+                .orElseThrow(() -> new ResourceNotFoundException("Book not found with ISBN: " + isbn));
+        return mapToDTO(book);
+}
 }
